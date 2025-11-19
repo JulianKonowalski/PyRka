@@ -1,21 +1,26 @@
 import io
-import time
-import typing
 
 import gtts
-import pyglet
+
+from backend.FileReader import FileReader
+from backend.AudioPlayer import AudioPlayer 
 
 class TTS:
 
-    data_callback: typing.Callable[[None], str] | None = None
+    file_reader: FileReader | None = None
+    audio_player: AudioPlayer | None = None
 
-    def __init__(self, data_callback: typing.Callable[[None], list[str]]) -> None:
-        self.data_callback = data_callback
+    def __init__(self, filepath: str) -> None:
+        self.file_reader = FileReader(filepath)
+        self.audio_player = AudioPlayer(self.__parseLine__)
 
-    def run(self) -> None:
-        while data := self.data_callback():
-            mp3_fp = io.BytesIO()
-            gtts.gTTS(data, lang="en").write_to_fp(mp3_fp)
-            audio = pyglet.media.load(".mp3", mp3_fp, streaming=False)
-            audio.play()
-            time.sleep(audio.duration)
+    def __parseLine__(self) -> io.BytesIO:
+        data = self.file_reader.readLine()
+        if data == "": return None
+        
+        mp3_fp = io.BytesIO()
+        gtts.gTTS(data, lang="en").write_to_fp(mp3_fp)
+        return mp3_fp
+    
+    def run(self):
+        self.audio_player.run()
