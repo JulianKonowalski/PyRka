@@ -1,9 +1,13 @@
-from TTS import TTS
+import os
+import pathlib
 
-def data_callback() -> str:
-    data = input("Please input tts sequence or press q to exit:\n")
-    return data if data != "q" else None
+from backend.TTS import TTS
+from backend.FileReader import FileReader
+
+CWD: str = pathlib.Path(__file__).parent.resolve()
+FILEPATH: str = os.path.join(CWD, "..", "test.txt")
 
 if __name__ == "__main__":
-    tts = TTS(data_callback)
+    fr = FileReader(FILEPATH)
+    tts = TTS(fr.readLine)
     tts.run()
