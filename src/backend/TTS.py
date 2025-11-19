@@ -26,20 +26,16 @@ class TTS:
         return mp3_fp
 
     def __parseFile__(self) -> None:
-        while True:
-            parsed = self.__parseLine__()
+        while parsed := self.__parseLine__():
             while len(self.data) >= 5: pass
             self.data.append(parsed)
-            if parsed == None: break
     
     def getDataChunk(self) -> io.BytesIO | None:
-        return self.data.pop(0)
+        if len(self.data) <= 0: return None
+        else: return self.data.pop(0)
 
     def run(self) -> None:
         audio_thread = threading.Thread(target=self.audio_player.run)
         self.is_running = True
         audio_thread.start()
         self.__parseFile__()
-
-    def stop(self) -> None:
-        self.is_running = False
