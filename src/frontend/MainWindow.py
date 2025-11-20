@@ -8,7 +8,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setGeometry(150, 150, 400, 400)
+        self.setFixedSize(400, 400)
         self.setWindowTitle("PyRka")
         
         self.central_widget = CentralWidget(self)
