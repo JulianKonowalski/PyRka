@@ -23,14 +23,8 @@ class FileReader:
 
     def __readDocx__(self) -> str:
         document = docx.Document(self.filepath)
-        text = ""
-        for paragraph in document.paragraphs:
-            text += paragraph.text + "\n"
-        return text
+        return "".join([paragraph.text + " " for paragraph in document.paragraphs])
 
     def __readPdf__(self) -> str:
         reader = pypdf.PdfReader(self.filepath)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text() + "\n"
-        return text
+        return "".join([page.extract_text() + " " for page in reader.pages])
