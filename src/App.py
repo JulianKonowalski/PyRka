@@ -11,7 +11,7 @@ class App(QApplication):
     def __init__(self, argv: list[str]) -> None:
         super().__init__(argv)
         self.main_window = MainWindow()
-        self.main_window.central_widget.fileOpened.connect(self.__ttsInit__)
+        # self.main_window.central_widget.fileOpened.connect(self.__ttsInit__)
         self.main_window.show()
 
     def __ttsInit__(self, text: str) -> None:

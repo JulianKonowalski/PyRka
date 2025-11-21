@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QFileDialog
 from frontend.Controls import Controls
 from frontend.TextViewer import TextViewer
 
+from backend.FileReader import FileReader
+
 class CentralWidget(QWidget):
 
     fileChosen: pyqtSignal = pyqtSignal(str, name="filepath")
@@ -32,11 +34,16 @@ class CentralWidget(QWidget):
             None, 
             "Open File", 
             "", 
-            self.tr("Text Files (*.txt)")
+            self.tr(
+                "Supported Files (*.txt *.docx *.pdf);;" \
+                "Text Files (*.txt);;" \
+                "Microsoft Word Files (*.docx);;" \
+                "PDF files (*.pdf)"
+            )
         )
         if check: self.fileChosen.emit(filepath)
 
     def __openFile__(self, filepath: str) -> None:
-        text = open(filepath).read()
+        text = FileReader(filepath).readAll()
         self.text_viewer.setPlainText(text)
         self.fileOpened.emit(text)

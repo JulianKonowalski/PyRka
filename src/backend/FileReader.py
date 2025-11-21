@@ -1,17 +1,37 @@
 import os
-import io
+
+import docx 
+import pypdf
 
 class FileReader:
 
-    file: io.TextIOWrapper | None = None
-    filesize: int = 0
+    filepath: str = ""
 
     def __init__(self, filepath: str) -> None:
-        self.file = open(filepath, "r")
-        self.filesize = os.fstat(self.file.fileno()).st_size
+        self.filepath = filepath
 
-    def readLine(self) -> str:
-        data = ""
-        while data == "" and self.file.tell() < self.filesize:
-            data = self.file.readline().strip("\n")
-        return data
+    def readAll(self) -> str:
+        _, extension = os.path.splitext(self.filepath)
+        match extension.lower():
+            case ".txt": return self.__readTxt__()
+            case ".docx": return self.__readDocx__()
+            case ".pdf": return self.__readPdf__()
+            case _: return ""
+
+    def __readTxt__(self) -> str:
+        return open(self.filepath).read()
+
+    def __readDocx__(self) -> str:
+        document = docx.Document(self.filepath)
+        text = ""
+        for paragraph in document.paragraphs:
+            text += paragraph.text + "\n"
+        return text
+
+
+    def __readPdf__(self) -> str:
+        reader = pypdf.PdfReader(self.filepath)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
+        return text
