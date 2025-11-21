@@ -19,5 +19,4 @@ class App(QApplication):
         self.tts = TTS(text)
 
     def __ttsRun__(self) -> None:
-        if self.tts == None: return
-        self.tts.run()
+        self.tts.playPause()
