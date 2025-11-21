@@ -28,7 +28,6 @@ class FileReader:
             text += paragraph.text + "\n"
         return text
 
-
     def __readPdf__(self) -> str:
         reader = pypdf.PdfReader(self.filepath)
         text = ""
